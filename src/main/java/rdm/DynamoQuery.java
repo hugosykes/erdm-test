@@ -2,6 +2,7 @@ package rdm;
 
 import java.util.List;
 import java.util.Map;
+
 import java.util.HashMap;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
@@ -10,6 +11,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
@@ -22,21 +24,22 @@ public class DynamoQuery {
         try {
             DynamoDBMapper mapper = new DynamoDBMapper(client);
 
-            FindPriceDataWithPriceOf(mapper, 100);
+            ScanPriceDataWithPriceOf(mapper, 100);
+            // QueryPriceDataWithPriceOf(mapper, 100);
         } catch (Throwable t) {
             System.err.println("Error running the DynamoDB Query: " + t);
             t.printStackTrace();
         }
     }
 
-    private static void FindPriceDataWithPriceOf(DynamoDBMapper mapper, Integer priceOf) throws Exception {
-        System.out.println("Find Price data with a price of: " + priceOf);
+    private static void ScanPriceDataWithPriceOf(DynamoDBMapper mapper, Integer priceOf) throws Exception {
+        System.out.println("Find Price data with a price of: " + priceOf + " using scan.");
         
         Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
         eav.put(":val1", new AttributeValue().withN(priceOf.toString()));
         
         DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
-        .withFilterExpression("price = :val1").withExpressionAttributeValues(eav);
+            .withFilterExpression("price = :val1").withExpressionAttributeValues(eav);
         
         List<PriceData> priceData = mapper.scan(PriceData.class, scanExpression);
 
@@ -44,6 +47,24 @@ public class DynamoQuery {
             System.out.println(price.toString());
         }
     }
+
+    // private static void QueryPriceDataWithPriceOf(DynamoDBMapper mapper, Integer priceOf) throws Exception {
+    //     System.out.println("Find Price data with a price of: " + priceOf + " using query.");
+
+    //     Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
+    //     eav.put(":val1", new AttributeValue().withN("24"));
+    //     eav.put(":val2", new AttributeValue().withN(priceOf.toString()));
+        
+    //     DynamoDBQueryExpression<PriceData> queryExpression = new DynamoDBQueryExpression<PriceData>()
+    //         .withKeyConditionExpression("id = :val1")
+    //         .withExpressionAttributeValues(eav);
+
+    //     List<PriceData> priceData = mapper.query(PriceData.class, queryExpression);
+
+    //     for (PriceData price : priceData) {
+    //         System.out.println(price.toString());
+    //     }
+    // }
 
     @DynamoDBTable(tableName = "hugo_test")
     public static class PriceData {
