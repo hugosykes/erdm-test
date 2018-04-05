@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: "io.spring.dependency-management"
 
-mainClassName = 'rdm.HelloWorld'
+mainClassName = 'rdm.DynamoQuery'
 
 repositories {
     mavenCentral()
@@ -32,5 +32,5 @@ dependencyManagement {
 }
 
 dependencies {
-    compile "com.amazonaws:aws-java-sdk-s3"
+    compile "com.amazonaws:aws-java-sdk-dynamodb"
 }
