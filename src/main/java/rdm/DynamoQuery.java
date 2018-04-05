@@ -20,7 +20,7 @@ public class DynamoQuery {
 
     static AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().build();
 
-    public static void main(String[] args) throws Exception {
+    public void sendQuery() {
         try {
             DynamoDBMapper mapper = new DynamoDBMapper(client);
 
@@ -32,7 +32,7 @@ public class DynamoQuery {
         }
     }
 
-    private static void ScanPriceDataWithPriceOf(DynamoDBMapper mapper, Integer priceOf) throws Exception {
+    private static void ScanPriceDataWithPriceOf(DynamoDBMapper mapper, Integer priceOf) {
         System.out.println("Find Price data with a price of: " + priceOf + " using scan.");
         
         Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
