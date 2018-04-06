@@ -2,8 +2,8 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
-      <module name="rdm-test_main" target="1.8" />
-      <module name="rdm-test_test" target="1.8" />
+      <module name="erdm-test_main" target="1.8" />
+      <module name="erdm-test_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

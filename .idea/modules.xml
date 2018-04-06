@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/rdm-test.iml" filepath="$PROJECT_DIR$/rdm-test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rdm-test_main.iml" filepath="$PROJECT_DIR$/.idea/modules/rdm-test_main.iml" group="rdm-test" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rdm-test_test.iml" filepath="$PROJECT_DIR$/.idea/modules/rdm-test_test.iml" group="rdm-test" />
+      <module fileurl="file://$PROJECT_DIR$/erdm-test.iml" filepath="$PROJECT_DIR$/erdm-test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/erdm-test_main.iml" filepath="$PROJECT_DIR$/.idea/modules/erdm-test_main.iml" group="erdm-test" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/erdm-test_main.iml" filepath="$PROJECT_DIR$/.idea/modules/erdm-test_main.iml" group="erdm-test" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/erdm-test_test.iml" filepath="$PROJECT_DIR$/.idea/modules/erdm-test_test.iml" group="erdm-test" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/erdm-test_test.iml" filepath="$PROJECT_DIR$/.idea/modules/erdm-test_test.iml" group="erdm-test" />
     </modules>
   </component>
 </project>

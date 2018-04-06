@@ -1,4 +1,4 @@
-package rdm;
+package erdm;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -6,6 +6,7 @@ import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,7 @@ public class SQSHandler {
          * Creating Service Clients in the AWS SDK for Java Developer Guide.
          */
         final AmazonSQS sqs = AmazonSQSClientBuilder.defaultClient();
-        private String myQueueUrl;
+        public String myQueueUrl;
         private List<Message> messages;
 
     public void spinUp() {
@@ -32,7 +33,7 @@ public class SQSHandler {
 
             // Create a FIFO queue
             System.out.println("Creating a new Amazon SQS FIFO queue called " +
-                    "MyFifoQueue.fifo.\n");
+                    "erdm_test.fifo.\n");
             final Map<String, String> attributes = new HashMap<String, String>();
 
             // A FIFO queue must have the FifoQueue attribute set to True
@@ -46,7 +47,7 @@ public class SQSHandler {
 
             // The FIFO queue name must end with the .fifo suffix
             final CreateQueueRequest createQueueRequest =
-                    new CreateQueueRequest("MyFifoQueue.fifo")
+                    new CreateQueueRequest("erdm_test.fifo")
                             .withAttributes(attributes);
             myQueueUrl = sqs.createQueue(createQueueRequest).getQueueUrl();
 
@@ -75,12 +76,12 @@ public class SQSHandler {
         }
     }
 
-    public void sendAndReceiveMessage(String messageToBeSent) {
+    public List<String> sendAndReceiveMessage(String messageToBeSent) {
 
         try {
 
             // Send a message
-            System.out.println("Sending a message to MyFifoQueue.fifo.\n");
+            System.out.println("Sending a message to erdm_test.fifo.\n");
             final SendMessageRequest sendMessageRequest =
                     new SendMessageRequest(myQueueUrl, messageToBeSent);
             /*
@@ -97,9 +98,8 @@ public class SQSHandler {
             final String messageId = sendMessageResult.getMessageId();
             System.out.println("SendMessage succeed with messageId "
                     + messageId + ", sequence number " + sequenceNumber + "\n");
-
             // Receive messages
-            System.out.println("Receiving messages from MyFifoQueue.fifo.\n");
+            System.out.println("Receiving messages from erdm_test.fifo.\n");
             final ReceiveMessageRequest receiveMessageRequest =
                     new ReceiveMessageRequest(myQueueUrl);
 
@@ -125,6 +125,11 @@ public class SQSHandler {
                 }
             }
             System.out.println();
+            List<String> messageBodies = new ArrayList<>();
+            for (Message message : messages ) {
+                    messageBodies.add(message.getBody());
+            }
+            return messageBodies;
         } catch (final AmazonServiceException ase) {
             System.out.println("Caught an AmazonServiceException, which means " +
                     "your request made it to Amazon SQS, but was " +
@@ -141,6 +146,7 @@ public class SQSHandler {
                     "being able to access the network.");
             System.out.println("Error Message: " + ace.getMessage());
         }
+        return new ArrayList<>();
     }
 
 
@@ -150,9 +156,13 @@ public class SQSHandler {
 
             // Delete the message
             System.out.println("Deleting the message.\n");
-            final String messageReceiptHandle = messages.get(0).getReceiptHandle();
-            sqs.deleteMessage(new DeleteMessageRequest(myQueueUrl,
-                    messageReceiptHandle));
+            try {
+                final String messageReceiptHandle = messages.get(0).getReceiptHandle();
+                sqs.deleteMessage(new DeleteMessageRequest(myQueueUrl,
+                        messageReceiptHandle));
+            } catch (final IndexOutOfBoundsException e) {
+                System.out.println("Error message for IndexOutOfBoundsException: " + e.getMessage());
+            }
 
             // Delete the queue
             System.out.println("Deleting the queue.\n");
