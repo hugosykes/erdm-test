@@ -101,7 +101,9 @@ public class SQSHandler {
             // Receive messages
             System.out.println("Receiving messages from erdm_test.fifo.\n");
             final ReceiveMessageRequest receiveMessageRequest =
-                    new ReceiveMessageRequest(myQueueUrl);
+                    new ReceiveMessageRequest(myQueueUrl)
+                    .withMaxNumberOfMessages(10)
+                    .withAttributeNames("ApproximateReceiveCount");
 
             // Uncomment the following to provide the ReceiveRequestDeduplicationId
             //receiveMessageRequest.setReceiveRequestAttemptId("1");
