@@ -4,19 +4,22 @@
 
 ## SQS
 
-Java class called SQSHandler which generates a queue, sends and receives messages from it and deletes it.
+Java class called SQSHandler which can generate a queue; send, receive and delete messages from it; and delete it.
 
 ## DynamoDB
 
-Another class which scans a Dynamo database of price points.
+Another class which scans a Dynamo database of price points of a particular price
 
-### Plan
+## Controller
 
-* Have the SQS Handler set up a queue
-* Get DynamoQuery to send a query through the queue
-* This will involve:
-* - sending json as the message
-* - have SQS handler listen for messages
-* - when a new message comes in, pass it to DynamoQuery
-* - having DynamoDB scan using that filter expression
-* - somehow sending the response back
+Controls the other two classes and sends messages, etc. to the queue
+
+### Process
+
+1. Controller creates instances of both classes above
+2. Spins up the SQS queue
+3. Sends a message of 'price = 100' to the queue
+4. Receives the message back from the queue
+5. Translates the text message into a scan query for DynamoDB
+6. Queries the DynamoDB table with above query and displays results
+7. Deletes both the messages and queue

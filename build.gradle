@@ -1,8 +1,26 @@
-apply plugin: 'java'
-apply plugin: 'application'
-apply plugin: "io.spring.dependency-management"
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath 'io.spring.gradle:dependency-management-plugin:1.0.3.RELEASE'
+        classpath 'gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.19.2'
+    }
+}
 
-mainClassName = 'erdm.Controller'
+// plugins {
+//     id 'com.palantir.docker' version '0.19.2'
+// }
+
+apply plugin: "java"
+apply plugin: "application"
+apply plugin: "io.spring.dependency-management"
+apply plugin: "com.palantir.docker"
+
+mainClassName = "erdm.Controller"
 
 repositories {
     mavenCentral()
@@ -12,26 +30,24 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 jar {
-    baseName = 'gs-gradle'
-    version = '0.1.0'
-}
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "io.spring.gradle:dependency-management-plugin:1.0.3.RELEASE"
-    }
+    baseName = "gs-gradle"
+    version = "0.1.0"
 }
 
 dependencyManagement {
     imports {
-        mavenBom 'com.amazonaws:aws-java-sdk-bom:1.11.228'
+        mavenBom "com.amazonaws:aws-java-sdk-bom:1.11.228"
     }
 }
 
 dependencies {
     compile "com.amazonaws:aws-java-sdk-dynamodb"
     compile "com.amazonaws:aws-java-sdk-sqs"
+}
+
+
+docker {
+    name "hugosykes/erdm-test"
+    files jar.archivePath
+    buildArgs(["JAR_FILE": "${jar.archiveName}"])
 }
